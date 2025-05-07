@@ -26,22 +26,33 @@ exports.register = async (req,res)=>{
 }
 
 
-exports.login = async (req,res)=>{
-    const {username,password} = req.body
-    try {
-      const existingUser = await users.findOne({username,password})
-      if(existingUser){
-        res.status(200).json({message:"userlogin sucess"})
-      }else{
-        res.status(404).json({message:"invalid username or password"})
-      }
-    } catch (error) {
-      res.status(400).json(error)
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const existingUser = await users.findOne({ username, password });
+
+    if (existingUser) {
+      // Create payload
+      const payload = {
+        userId: existingUser._id,
+        username: existingUser.username,
+      };
+
+      // Generate token
+      const token = jwt.sign(payload,process.env.token, { expiresIn: '1h' });
+
+      res.status(200).json({
+        message: "User login success",
+        token, // Send the token to frontend
+      });
+    } else {
+      res.status(404).json({ message: "Invalid username or password" });
     }
-} 
-
-
-
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 
 
 
