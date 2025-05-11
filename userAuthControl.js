@@ -5,7 +5,6 @@ const users = require('./userScheema.js');
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY
-const bcrypt = require('bcrypt');
 
 
 exports.register = async (req,res)=>{
@@ -19,7 +18,7 @@ exports.register = async (req,res)=>{
         await newUser.save()
         res.status(200).json(newUser) 
       }
-    } catch (error) {
+    } catch (error) { 
       res.status(400).json(error)
     }
 
