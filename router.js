@@ -1,15 +1,18 @@
 const express = require("express")
-const { register, login, resendOtp, sendOtp} = require("./userAuthControl.js")
-const { createVehicle, allVehicles } = require("./vehicleController.js")
+const { register, login, resendOtp, sendOtp, verifyOtp, resetPassword} = require("./userAuthControl.js")
+const { createVehicle, updateVehicle, getAllVehicles, deleteVehicle } = require("./vehicleController.js")
 const upload = require("./uploadMiddleware.js")
 const router = express.Router()
 
 router.post('/register',register)
 router.post('/login',login)
 router.post('/sendotp',sendOtp)
+router.post('/verifyotp',verifyOtp);
 router.post('/resendOtp',resendOtp)
+router.post('/resetpassword',resetPassword)
 // router.get('/add',createVehicle)
  
+
 router.post(
     '/vehicles',
     upload.fields([
@@ -18,11 +21,23 @@ router.post(
     ]),
     createVehicle
   );
-router.get('/vehicles',allVehicles);
+  router.post(
+    '/updatevehicles/:id', // include :id in the route
+    upload.fields([
+      { name: 'vehicleImage', maxCount: 1 },
+      { name: 'numberPlateImage', maxCount: 1 }
+    ]),
+    updateVehicle
+  );
+
+  
+
+router.get('/vehicles',getAllVehicles);
+router.delete('/vehicles/:id',deleteVehicle);
 
   // routes/vehicleRoutes.js
 
-module.exports = router
+module.exports = router 
 
 
 
