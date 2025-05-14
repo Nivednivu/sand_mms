@@ -2,6 +2,7 @@ const express = require("express")
 const { register, login, resendOtp, sendOtp, verifyOtp, resetPassword} = require("./userAuthControl.js")
 const { createVehicle, updateVehicle, getAllVehicles, deleteVehicle } = require("./vehicleController.js")
 const upload = require("./uploadMiddleware.js")
+const { queryData, getAllQueries, getQueryById } = require("./queryAuth.js")
 const router = express.Router()
 
 router.post('/register',register)
@@ -34,6 +35,10 @@ router.post(
 
 router.get('/vehicles',getAllVehicles);
 router.delete('/vehicles/:id',deleteVehicle);
+router.post('/query',queryData);
+router.get('/queryget',getAllQueries);
+router.get('/queryget',getQueryById);
+router.get('/queryget/:id', getQueryById);
 
   // routes/vehicleRoutes.js
 
