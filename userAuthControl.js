@@ -8,19 +8,19 @@ apiKey.apiKey = process.env.BREVO_API_KEY
 
 
 exports.register = async (req,res)=>{
-    const {fullname,email,mobilenumber,district,username,password} = req.body
+    const {fullname,email,username,password} = req.body
     try {
       const existingUser = await users.findOne({email})
       if(existingUser){
         res.status(200).json({message:"user already register"})
       }else{
-        const newUser = new users({fullname,email,mobilenumber,district,username,password})
+        const newUser = new users({fullname,email,username,password})
         await newUser.save()
         res.status(200).json(newUser) 
       }
     } catch (error) { 
       res.status(400).json(error)
-    }
+    } 
 
 }
 

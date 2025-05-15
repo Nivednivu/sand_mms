@@ -8,13 +8,6 @@ const usersScheema = new mongoose.Schema({
         type:String,
         unique:true
     },
-    mobilenumber:{
-        type:String
-    },
-    district:{
-        type:String
-    },
-
     username:{
         type:String
     },
