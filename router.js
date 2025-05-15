@@ -47,6 +47,8 @@ router.post('/adminadd', adminAddQuaeyAPI);
 router.get('/adminadd', getAllAdminEntries);
 router.get('/adminadd/:id', admingetQueryById);
 router.put('/adminupdate/:id', adminUpdateQueryById);
+// router.put('/employee/:id', employeeDataById);
+
 
 
 // router.post('/employeeget/:id', employeeDataById);
