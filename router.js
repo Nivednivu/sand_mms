@@ -4,7 +4,7 @@ const { createVehicle, updateVehicle, getAllVehicles, deleteVehicle } = require(
 const upload = require("./uploadMiddleware.js")
 const { queryData, getAllQueries, getQueryById, getuserById } = require("./queryAuth.js")
 const { employeeData } = require("./employeeAuth.js")
-const {  adminAddQuaeyAPI, getAllAdminEntries, admingetQueryById, adminUpdateQueryById } = require("./adminAuth.js")
+const {  adminAddQuaeyAPI, getAllAdminEntries, admingetQueryById, adminUpdateQueryById, adminDeleteQueryById, getAllAdminEntriesLast } = require("./adminAuth.js")
 const router = express.Router()
 
 router.post('/register',register)
@@ -42,12 +42,21 @@ router.get('/queryget',getAllQueries);
 router.get('/queryget',getQueryById);
 router.get('/queryget/:id', getQueryById);
 router.post('/queryget/:id', getuserById);
-router.post('/employeeadd', employeeData);
-router.post('/adminadd', adminAddQuaeyAPI);
+router.post('/adminadd', upload.single('signature'), adminAddQuaeyAPI);
 router.get('/adminadd', getAllAdminEntries);
+router.get('/admingetlast', getAllAdminEntriesLast);
+
+
 router.get('/adminadd/:id', admingetQueryById);
+
 router.put('/adminupdate/:id', adminUpdateQueryById);
+router.delete('/admin/delete/:id',adminDeleteQueryById);
 // router.put('/employee/:id', employeeDataById);
+
+
+
+
+router.post('/employeeadd', employeeData);
 
 
 

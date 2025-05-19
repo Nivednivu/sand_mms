@@ -16,6 +16,7 @@ const employeeSchema = new mongoose.Schema({
  destinationAddress: String,
   driverName: String,
   via: String,
+  lesseeAuthPersonName:String
 }, {
   timestamps: true
 });
