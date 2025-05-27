@@ -14,12 +14,12 @@ const AdminScheema = new mongoose.Schema({
   sfNoExtent: String,
   classification: String,
   leasePeriod: String,
-    dispatchNo:String, 
-    withinTamilNadu: String, 
+    dispatchNo:String,  
+    withinTamilNadu: String,  
   mineralName: String,
   signature:String,
     
-})
+}) 
   
 const admins = mongoose.model("admins",AdminScheema)
 module.exports = admins

@@ -1,6 +1,7 @@
 const admins = require('./adminScheema');
 
-// POST route to add data
+// POST route to add data   
+
 const path = require('path');
 const fs = require('fs');
 
@@ -34,6 +35,7 @@ exports.adminAddQuaeyAPI = async (req, res) => {
   }
 };
 
+
 exports.getAllAdminEntries = async (req, res) => {
   try {
     const entries = await admins.find();
@@ -47,19 +49,34 @@ exports.getAllAdminEntries = async (req, res) => {
   }
 };
 
+
+
 exports.getAllAdminEntriesLast = async (req, res) => {
   try {
-    const limit = req.query.limit || 10; // Default to 10 if not specified
-    const entries = await admins.find()
-      .sort({ createdAt: -1 })
-      .limit(parseInt(limit));
-    res.status(200).json({ data: entries });
+    const lastEntry = await admins.findOne()
+      .sort({ _id: -1 }) // or use { createdAt: -1 } if timestamps are enabled
+      .lean();
+
+    if (!lastEntry) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'No admin entries found' 
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: lastEntry
+    });
   } catch (error) {
-    console.error("Error fetching entries:", error);
-    res.status(500).json({ message: "Internal server error", error });
+    res.status(500).json({ 
+      success: false,
+      message: "Internal server error", 
+      error: error.message 
+    });
   }
 };
-// Add this to serve signature images
+
 exports.getSignature = async (req, res) => {
   try {
     const admin = await admins.findById(req.params.id);
@@ -73,6 +90,7 @@ exports.getSignature = async (req, res) => {
     res.status(500).send('Error fetching signature');
   }
 };
+
 
 exports.admingetQueryById = async (req, res) => {
   try {
@@ -96,6 +114,7 @@ exports.admingetQueryById = async (req, res) => {
 // Import your model
 
 // Controller to update an entry by ID
+
 exports.adminUpdateQueryById = async (req, res) => {
   try {
     const id = req.params.id;

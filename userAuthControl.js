@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 require('dotenv').config();
-const users = require('./userScheema.js');
+const users = require('./userScheema.js'); 
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY

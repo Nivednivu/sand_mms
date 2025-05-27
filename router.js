@@ -2,8 +2,8 @@ const express = require("express")
 const { register, login, resendOtp, sendOtp, verifyOtp, resetPassword} = require("./userAuthControl.js")
 const { createVehicle, updateVehicle, getAllVehicles, deleteVehicle } = require("./vehicleController.js")
 const upload = require("./uploadMiddleware.js")
-const { queryData, getAllQueries, getQueryById, getuserById } = require("./queryAuth.js")
-const { employeeData } = require("./employeeAuth.js")
+const { queryData, getAllQueries, getQueryById, getuserById, getCurrentSerial, generateNextSerial } = require("./queryAuth.js")
+const { employeeData, getLastEmployee } = require("./employeeAuth.js")
 const {  adminAddQuaeyAPI, getAllAdminEntries, admingetQueryById, adminUpdateQueryById, adminDeleteQueryById, getAllAdminEntriesLast } = require("./adminAuth.js")
 const router = express.Router()
 
@@ -14,12 +14,12 @@ router.post('/verifyotp',verifyOtp);
 router.post('/resendOtp',resendOtp)
 router.post('/resetpassword',resetPassword)
 // router.get('/add',createVehicle)
- 
+  
 
 router.post(
-    '/vehicles',
+    '/vehicles', 
     upload.fields([
-      { name: 'vehicleImage', maxCount: 1 },
+      { name: 'vehicleImage', maxCount: 1 },  
       { name: 'numberPlateImage', maxCount: 1 }
     ]),
     createVehicle 
@@ -37,12 +37,24 @@ router.post(
 
 router.get('/vehicles',getAllVehicles);
 router.delete('/vehicles/:id',deleteVehicle);
-router.post('/query',queryData);
+
+
+
+router.post('/query', queryData);
+router.get('/serial', getCurrentSerial);
+router.post('/queryserialno', generateNextSerial);
+
+// router.get('/dispatch',getCurrentDispatch);
+// router.post('/dispatchno',generateNextDispatch);
+
+ 
+
+ 
 router.get('/queryget',getAllQueries);
-router.get('/queryget',getQueryById);
+router.get('/queryget',getQueryById); 
 router.get('/queryget/:id', getQueryById);
-router.post('/queryget/:id', getuserById);
-router.post('/adminadd', upload.single('signature'), adminAddQuaeyAPI);
+router.post('/queryget/:id', getuserById); 
+router.post('/adminadd', upload.single('signature'), adminAddQuaeyAPI);  
 router.get('/adminadd', getAllAdminEntries);
 router.get('/admingetlast', getAllAdminEntriesLast);
 
@@ -55,10 +67,9 @@ router.delete('/admin/delete/:id',adminDeleteQueryById);
 
 
 
-
 router.post('/employeeadd', employeeData);
 
-
+router.get('/employee/last', getLastEmployee);
 
 // router.post('/employeeget/:id', employeeDataById);
 
