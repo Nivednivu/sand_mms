@@ -2,7 +2,7 @@ const express = require("express")
 const { register, login, resendOtp, sendOtp, verifyOtp, resetPassword} = require("./userAuthControl.js")
 const { createVehicle, updateVehicle, getAllVehicles, deleteVehicle } = require("./vehicleController.js")
 const upload = require("./uploadMiddleware.js")
-const { queryData, getAllQueries, getQueryById, getuserById, getCurrentSerial, generateNextSerial } = require("./queryAuth.js")
+const { queryData, getAllQueries, getQueryById, getuserById, getCurrentSerial, generateNextSerial, deleteQuery, deleteAllQueries } = require("./queryAuth.js")
 const { employeeData, getLastEmployee } = require("./employeeAuth.js")
 const {  adminAddQuaeyAPI, getAllAdminEntries, admingetQueryById, adminUpdateQueryById, adminDeleteQueryById, getAllAdminEntriesLast } = require("./adminAuth.js")
 const router = express.Router()
@@ -39,10 +39,16 @@ router.get('/vehicles',getAllVehicles);
 router.delete('/vehicles/:id',deleteVehicle);
 
 
-
+router.get('/queryget',getAllQueries);
 router.post('/query', queryData);
 router.get('/serial', getCurrentSerial);
 router.post('/queryserialno', generateNextSerial);
+router.delete('/deleteQuery/:id', deleteQuery);
+router.delete('/deleteAllQueries', deleteAllQueries);
+router.get('/queryget/:id', getQueryById);
+
+// In your routes file (e.g., routes.js)
+
 
 // router.get('/dispatch',getCurrentDispatch);
 // router.post('/dispatchno',generateNextDispatch);
@@ -50,9 +56,7 @@ router.post('/queryserialno', generateNextSerial);
  
 
  
-router.get('/queryget',getAllQueries);
 router.get('/queryget',getQueryById); 
-router.get('/queryget/:id', getQueryById);
 router.post('/queryget/:id', getuserById); 
 router.post('/adminadd', upload.single('signature'), adminAddQuaeyAPI);  
 router.get('/adminadd', getAllAdminEntries);

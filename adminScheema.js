@@ -18,7 +18,6 @@ const AdminScheema = new mongoose.Schema({
     withinTamilNadu: String,   
   mineralName: String,
   signature:String,
-    SerialStartNo:String,
   SerialEndNo:String,
   // dispatchEndNo: String, 
 

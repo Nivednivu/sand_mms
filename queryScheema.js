@@ -32,9 +32,7 @@ const querySchema = new mongoose.Schema({
   driverName: String,
   via: String,
   lesseeAuthPersonName:String,
-  SerialStartNo:String,
       SerialEndNo:String,
-    // dispatchEndNo: String,
 
 }, {
   timestamps: true

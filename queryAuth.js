@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const querys = require("./queryScheema");
 
 // Save query data with serial number from backend
@@ -62,6 +63,73 @@ exports.getCurrentSerial = async (req, res) => {
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }};
+
+
+  // Delete single query
+
+  exports.getAllQueries = async (req, res) => {
+  try {
+    const queries = await querys.find(); // Fetch all documents
+    res.status(200).json(queries);
+  } catch (error) {
+    console.error('Error fetching queries:', error); 
+    res.status(500).json({ error: 'Failed to fetch queries' });
+  }
+};
+
+
+exports.getQueryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query = await querys.findById(id);
+    if (!query) {
+      return res.status(404).json({ message: "Query not found" });
+    }
+    res.status(200).json(query);
+  } catch (error) {
+    console.error('Error fetching query:', error); 
+    res.status(500).json({ error: 'Failed to fetch query' });
+  }
+};
+
+
+
+exports.deleteQuery = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID format' });
+    }
+    
+    const deletedQuery = await querys.findByIdAndDelete(id);
+    if (!deletedQuery) {
+      return res.status(404).json({ error: 'Query not found' });
+    }
+    res.status(200).json({ message: 'Query deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting query:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete query',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+exports.deleteAllQueries = async (req, res) => {
+  try {
+    const result = await querys.deleteMany({});
+    res.status(200).json({ 
+      message: 'All queries deleted successfully',
+      deletedCount: result.deletedCount
+    });
+  } catch (error) { 
+    console.error('Error deleting all queries:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete all queries',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
 
 
 
@@ -140,19 +208,6 @@ exports.getAllQueries = async (req, res) => {
 };
 
 // Get single query by ID
-exports.getQueryById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const query = await querys.findById(id);
-    if (!query) {
-      return res.status(404).json({ message: "Query not found" });
-    }
-    res.status(200).json(query);
-  } catch (error) {
-    console.error('Error fetching query:', error); 
-    res.status(500).json({ error: 'Failed to fetch query' });
-  }
-};
 
 exports.getuserById = async (req, res) => {
   try {

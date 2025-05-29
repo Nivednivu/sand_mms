@@ -177,7 +177,7 @@ exports.resendOtp = async (req, res) => {
     // Email content
     const sender = {
       email: process.env.SENDER_EMAIL || 'nivedtp6@gmail.com',
-      name: 'Your App Name'
+      name: 'Minaral Management System'
     };
     
     const receivers = [{ email }];
