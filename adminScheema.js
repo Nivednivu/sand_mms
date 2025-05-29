@@ -15,13 +15,16 @@ const AdminScheema = new mongoose.Schema({
   classification: String,
   leasePeriod: String,
     dispatchNo:String,  
-    withinTamilNadu: String,  
+    withinTamilNadu: String,   
   mineralName: String,
   signature:String,
-    
+    SerialStartNo:String,
+  SerialEndNo:String,
+  // dispatchEndNo: String, 
+
 }) 
   
 const admins = mongoose.model("admins",AdminScheema)
 module.exports = admins
 
-  
+   

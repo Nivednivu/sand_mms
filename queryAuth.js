@@ -1,52 +1,68 @@
 const querys = require("./queryScheema");
 
-// Save query data
+// Save query data with serial number from backend
+
+// Save query data as it comes (no SerialNo generation)
 exports.queryData = async (req, res) => {
   try {
+    // Destructure to remove unwanted fields
     const { _id, createdAt, updatedAt, ...cleanData } = req.body;
 
+    // Create new document directly from request data
     const newQuery = new querys({
       ...cleanData,
-      createdAt: new Date()
+      createdAt: new Date() // Optional: explicitly set createdAt if not handled by schema
     });
+// console.log(newQuery);
 
+    // Save the document 
     const savedQuery = await newQuery.save();
-
+// console.log(savedQuery);
+  
+    // Send response
     res.status(201).json({
       success: true,
       message: 'Data saved successfully',
       data: savedQuery
     });
+
   } catch (error) {
     console.error('Error saving query:', error);
     res.status(500).json({
       success: false,
       error: 'Failed to save data',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    }); 
   }
 };
-
-// Get latest serial number
+// Get current serial number
 exports.getCurrentSerial = async (req, res) => {
-  try {
-    const latestQuery = await querys.findOne().sort({ createdAt: -1 });
+ try {
+    const latestQuery = await querys.findOne().sort({ createdAt: -1 }); // Sort by newest
+// console.log(latestQuery);
 
     if (!latestQuery) {
-      return res.status(200).json({ success: true, data: { SerialNo: 0 } });
+      return res.status(404).json({
+        success: false, 
+        message: 'No data found'
+      });
     }
 
-    res.status(200).json({ success: true, data: latestQuery });
+    res.status(200).json({
+      success: true,
+      data: latestQuery
+    });
 
   } catch (error) {
-    console.error('Error fetching latest query:', error);
+    // console.error('Error fetching latest query:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch latest data',
+      
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
-  }
-};
+  }};
+
 
 
 exports.generateNextSerial = async (req, res) => {
@@ -94,7 +110,10 @@ exports.generateNextDispatch = async (req, res) => {
   try {
     const lastEntry = await querys.findOne().sort({ createdAt: -1 });
     const currentDispatch = lastEntry?.dispatchNo || '1';
+    console.log(currentDispatch);
+    
     const nextDispatch = String(Number(currentDispatch) + 1);
+console.log(nextDispatch);
 
     // Save the new serial as a record flagged for serial update
     await new querys({

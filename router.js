@@ -17,7 +17,7 @@ router.post('/resetpassword',resetPassword)
   
 
 router.post(
-    '/vehicles', 
+    '/vehicles',  
     upload.fields([
       { name: 'vehicleImage', maxCount: 1 },  
       { name: 'numberPlateImage', maxCount: 1 }
@@ -61,7 +61,9 @@ router.get('/admingetlast', getAllAdminEntriesLast);
 
 router.get('/adminadd/:id', admingetQueryById);
 
+// Make sure this route is properly set up in your backend
 router.put('/adminupdate/:id', adminUpdateQueryById);
+
 router.delete('/admin/delete/:id',adminDeleteQueryById);
 // router.put('/employee/:id', employeeDataById);
 

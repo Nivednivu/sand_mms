@@ -7,8 +7,6 @@ const fs = require('fs');
 
 exports.adminAddQuaeyAPI = async (req, res) => {
   try {
-    // Handle file upload
-    // Create new admin with file info
     const newAdmin = new admins({
       ...req.body,
 
@@ -77,19 +75,6 @@ exports.getAllAdminEntriesLast = async (req, res) => {
   }
 };
 
-exports.getSignature = async (req, res) => {
-  try {
-    const admin = await admins.findById(req.params.id);
-    if (!admin || !admin.signature) {
-      return res.status(404).send('Signature not found');
-    }
-    
-    res.sendFile(admin.signature.path);
-  } catch (error) {
-    console.error('Error fetching signature:', error);
-    res.status(500).send('Error fetching signature');
-  }
-};
 
 
 exports.admingetQueryById = async (req, res) => {
@@ -116,30 +101,39 @@ exports.admingetQueryById = async (req, res) => {
 // Controller to update an entry by ID
 
 exports.adminUpdateQueryById = async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
   try {
-    const id = req.params.id;
-    const updatedData = req.body;
-
-    if (!id || id === "undefined") {
-      return res.status(400).json({ message: "Invalid or missing ID" });
+    // First check if the document exists
+    const existingDoc = await admins.findById(id);
+    if (!existingDoc) {
+      return res.status(404).json({ 
+        message: "Admin not found", 
+        data: null 
+      });
     }
 
-    const result = await admins.findByIdAndUpdate(id, updatedData, { new: true });
-
-    if (!result) {
-      return res.status(404).json({ message: "Query not found for update" });
-    }
+    // Then update it
+    const updatedDoc = await admins.findByIdAndUpdate(
+      id, 
+      updateData, 
+      { new: true }
+    );
 
     res.status(200).json({
-      message: "Query updated successfully",
-      updatedEntry: result
+      message: "Admin data updated successfully",
+      data: updatedDoc,
     });
   } catch (error) {
-    console.error('Error updating query:', error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Update error:', error);
+    res.status(500).json({
+      message: "Update failed",
+      error: error.message,
+      data: null,
+    });
   }
 };
-
 // DELETE: Delete query by ID
 exports.adminDeleteQueryById = async (req, res) => {
   try {
@@ -159,5 +153,20 @@ exports.adminDeleteQueryById = async (req, res) => {
   } catch (error) {
     console.error('Error deleting query:', error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+exports.getSignature = async (req, res) => {
+  try {
+    const admin = await admins.findById(req.params.id);
+    if (!admin || !admin.signature) {
+      return res.status(404).send('Signature not found');
+    }
+    
+    res.sendFile(admin.signature.path);
+  } catch (error) {
+    console.error('Error fetching signature:', error);
+    res.status(500).send('Error fetching signature');
   }
 };

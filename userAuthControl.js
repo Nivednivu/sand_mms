@@ -32,11 +32,11 @@ exports.login = async (req, res) => {
     const existingUser = await users.findOne({ username, password });
 
     if (existingUser) {
-      // Create payload
+      // Create payload 
       const payload = {
         userId: existingUser._id,
         username: existingUser.username,
-      };
+      }; 
 
       // Generate token
       const token = jwt.sign(payload,process.env.token, { expiresIn: '1h' });
