@@ -7,6 +7,7 @@ const querySchema = new mongoose.Schema({
     lesseeName: String,
     lesseeNameAddress: String,
     SerialNo:String,
+      SerialEndNo:String,
     bulkPermitNo:String,
     districtName: String,
     Taluk:String,
@@ -32,7 +33,6 @@ const querySchema = new mongoose.Schema({
   driverName: String,
   via: String,
   lesseeAuthPersonName:String,
-      SerialEndNo:String,
 
 }, {
   timestamps: true

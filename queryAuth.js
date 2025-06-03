@@ -28,7 +28,6 @@ exports.queryData = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error saving query:', error);
     res.status(500).json({
       success: false,
       error: 'Failed to save data',
@@ -37,6 +36,34 @@ exports.queryData = async (req, res) => {
   }
 };
 // Get current serial number
+
+
+  // Delete single query
+
+  exports.getAllQueries = async (req, res) => {
+  try {
+    const queries = await querys.find(); // Fetch all documents
+    res.status(200).json(queries);
+  } catch (error) {
+    console.error('Error fetching queries:', error); 
+    res.status(500).json({ error: 'Failed to fetch queries' });
+  }
+};
+
+
+// In your backend controller
+exports.getQueriesByLessee = async (req, res) => {
+  try {
+    const { lesseeId } = req.params;
+    const queries = await querys.find({ lesseeId });
+    res.status(200).json(queries);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch queries' });
+  }
+};
+
+
+
 exports.getCurrentSerial = async (req, res) => {
  try {
     const latestQuery = await querys.findOne().sort({ createdAt: -1 }); // Sort by newest
@@ -65,18 +92,6 @@ exports.getCurrentSerial = async (req, res) => {
   }};
 
 
-  // Delete single query
-
-  exports.getAllQueries = async (req, res) => {
-  try {
-    const queries = await querys.find(); // Fetch all documents
-    res.status(200).json(queries);
-  } catch (error) {
-    console.error('Error fetching queries:', error); 
-    res.status(500).json({ error: 'Failed to fetch queries' });
-  }
-};
-
 
 exports.getQueryById = async (req, res) => {
   try {
@@ -87,10 +102,10 @@ exports.getQueryById = async (req, res) => {
     }
     res.status(200).json(query);
   } catch (error) {
-    console.error('Error fetching query:', error); 
+    // console.error('Error fetching query:', error); 
     res.status(500).json({ error: 'Failed to fetch query' });
   }
-};
+}; 
 
 
 

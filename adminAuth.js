@@ -1,4 +1,5 @@
 const admins = require('./adminScheema');
+const jwt = require('jsonwebtoken'); // Optional for JWT
 
 // POST route to add data   
 
@@ -33,6 +34,136 @@ exports.adminAddQuaeyAPI = async (req, res) => {
   }
 };
 
+// Check if lesseeId exists
+exports.checkLesseeIdExists = async (req, res) => {
+  try {
+    const existingAdmin = await admins.findOne({ lesseeId: req.params.lesseeId });
+    res.status(200).json({ 
+      exists: !!existingAdmin,
+      existingData: existingAdmin || null
+    });
+  } catch (error) {
+    console.error('Error checking lesseeId:', error);
+    res.status(500).json({ 
+      message: "Internal server error"
+    });
+  }
+}
+
+// Update existing admin
+exports.updateAdminData = async (req, res) => {
+  try {
+    const { lesseeId } = req.body;
+    
+    const updatedAdmin = await admins.findOneAndUpdate(
+      { lesseeId },
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (!updatedAdmin) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Admin data updated successfully",
+      data: updatedAdmin
+    });
+  } catch (error) {
+    console.error('Error updating admin:', error);
+    res.status(500).json({ 
+      message: "Internal server error"
+    });
+  }
+}
+
+
+// Update admin with credentials
+exports.updateAdminWithCredentials = async (req, res) => {
+  try {
+    const { userId, fullname, email, lesseeId, password } = req.body;
+
+    // Hash the password
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
+    const updatedAdmin = await admins.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          fullname,
+          email,
+          lesseeId,
+          password,
+        }
+      },
+      { new: true }
+    );
+
+    if (!updatedAdmin) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Registration completed successfully",
+      data: updatedAdmin
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+
+// In your authController.js or similar
+
+exports.loginAdmin = async (req, res) => {
+  try {
+    const { lesseeId, password } = req.body;
+
+    // Find user by lesseeId (username)
+    const admin = await admins.findOne({  lesseeId,password });
+
+    if (!admin) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Compare passwords
+    // OR for hashed passwords:
+    // const isMatch = await bcrypt.compare(password, admin.password);
+
+
+    // Create token (optional)
+    const token = jwt.sign(
+      { id: admin._id, lesseeId: admin.lesseeId },
+      process.env.token,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: admin._id,
+        lesseeId: admin.lesseeId,
+        fullname: admin.fullname,
+        email: admin.email
+      }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+
+
+
 
 exports.getAllAdminEntries = async (req, res) => {
   try {
@@ -46,6 +177,7 @@ exports.getAllAdminEntries = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
+
 
 
 
