@@ -1,42 +1,37 @@
 const mongoose = require('mongoose');
 
 const querySchema = new mongoose.Schema({
-     hsnCode: String,
-     lesseeId: String,
-    minecode: String,
-    lesseeName: String,
-    lesseeNameAddress: String,
-    SerialNo:String,
-      SerialEndNo:String,
-    bulkPermitNo:String,
-    districtName: String,
-    Taluk:String,
-   village: String,
+  lesseeId: String,
+  registrationHolderName: String,
+  registrationHolderAddress: String,
+  SerialNo: String,
+  SerialEndNo: String,
+  bulkPermitNo: String,
+  districtName: String,
+  Taluk: String,
+  village: String,
   sfNoExtent: String,
-  classification: String,
-  leasePeriod: String,
-    dispatchNo:String, 
-    withinTamilNadu: String, 
   mineralName: String,
-  signature:String,
-  deliveredTo: String,
-  vehicleNo: String,
-  vehicleType: String,
-  totalDistance: String,
- travellingDate: String,
- requiredTime: String,
+  signature: String,
   quantity: String,
-  driverLicenseNo: String,
-  driverPhoneNo: String,
-  driverSignature: String,
- destinationAddress: String,
+  locationStockyard: String,
+  validityStockyard: String,
+  transitSerialNo: String, 
+  purchaserName: String,
+  purchaserAddress: String,
+  email: String, // Remove unique constraint if not needed
+  password: String,
+  fullname: String,
+  destinationState: String,
   driverName: String,
-  via: String,
-  lesseeAuthPersonName:String,
-
+  requiredTime: String,
+  totalDistance: String,
+  travellingDate: String,
+  vehicleNo: String,
+  time: String,
+  formattedTravellingDate: String
 }, {
   timestamps: true
 });
-
 const querys = mongoose.model('querys', querySchema);
 module.exports = querys  

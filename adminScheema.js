@@ -1,11 +1,9 @@
 const { default: mongoose } = require("mongoose");
 
 const AdminScheema = new mongoose.Schema({
-     hsnCode: String,
      lesseeId: String,
-    minecode: String,
-    lesseeName: String,
-    lesseeNameAddress: String,
+    registrationHolderName: String,
+    registrationHolderAddress: String,
     SerialNo:String,
       SerialEndNo:String,
     bulkPermitNo:String,
@@ -13,32 +11,31 @@ const AdminScheema = new mongoose.Schema({
     Taluk:String,
    village: String,
   sfNoExtent: String,
-  classification: String,
-  leasePeriod: String,
-    dispatchNo:String, 
-    withinTamilNadu: String, 
   mineralName: String,
-  signature:String,
-  deliveredTo: String,
-  vehicleNo: String,
-  vehicleType: String,
-  totalDistance: String,
- travellingDate: String,
- requiredTime: String,
+  signature:String, 
+  // deliveredTo: String,
+  // vehicleNo: String,
+  // vehicleType: String,
+  totalDistance: String,  //  approximateDistance:String,
+      travellingDate: String,
+    requiredTime: String, 
+ destinationState:String,
+//  startingTime: String,
+//  endTime: String,
   quantity: String,
-  driverLicenseNo: String,
-  driverPhoneNo: String,
-  driverSignature: String,
- destinationAddress: String,
+  locationStockyard:String,
+  validityStockyard:String,
+  transitSerialNo:String,
+ purchaserName: String,
+ purchaserAddress: String,
   driverName: String,
-  via: String,
-  lesseeAuthPersonName:String,
   fullname:String,
   email:{
     type:String,
     unique:true
   },
-  password:String
+  password:String}, {
+  timestamps: true
 }) 
 
 const admins = mongoose.model("admins",AdminScheema)

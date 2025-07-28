@@ -7,18 +7,40 @@ const querys = require("./queryScheema");
 exports.queryData = async (req, res) => {
   try {
     // Destructure to remove unwanted fields
-    const { _id, createdAt, updatedAt, ...cleanData } = req.body;
+    const { _id, createdAt, updatedAt, __v, ...cleanData } = req.body;
 
-    // Create new document directly from request data
+    // Log incoming data for debugging
+    console.log('Incoming data:', cleanData);
+
+    // Validate required fields
+    if (!cleanData.SerialNo) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields (SerialNo  are required)'
+      });
+    }
+
+    // Handle email uniqueness - either remove or generate unique email
+    if (cleanData.email) {
+      const existing = await querys.findOne({ email: cleanData.email });
+      if (existing) {
+        
+        // Option 1: Skip saving email
+        // delete cleanData.email;
+        
+        // Option 2: Generate unique email
+        cleanData.email = `${Date.now()}_${cleanData.email}`;
+      }
+    }
+
+    // Create new document 
     const newQuery = new querys({
       ...cleanData,
-      createdAt: new Date() // Optional: explicitly set createdAt if not handled by schema
+      createdAt: new Date()  
     });
-// console.log(newQuery);
 
-    // Save the document 
+    // Save the document
     const savedQuery = await newQuery.save();
-// console.log(savedQuery);
   
     // Send response
     res.status(201).json({
@@ -28,16 +50,24 @@ exports.queryData = async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Database save error:', error);
+    
+    let errorMessage = 'Failed to save data';
+    if (error.code === 11000) { // MongoDB duplicate key error
+      errorMessage = 'Duplicate key error - email already exists';
+    }
+
     res.status(500).json({
       success: false,
-      error: 'Failed to save data',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? {
+        message: error.message,
+        stack: error.stack,
+        fullError: error
+      } : undefined
     }); 
   }
 };
-// Get current serial number
-
-
   // Delete single query
 
   exports.getAllQueries = async (req, res) => {

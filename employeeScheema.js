@@ -3,40 +3,41 @@ const mongoose = require('mongoose');
 
 
 const employeeSchema = new mongoose.Schema({
-     hsnCode: String,
      lesseeId: String,
-    minecode: String,
-    lesseeName: String,
-    lesseeNameAddress: String,
+    registrationHolderName: String,
+    registrationHolderAddress: String,
     SerialNo:String,
+      SerialEndNo:String,
     bulkPermitNo:String,
     districtName: String,
     Taluk:String,
-   village: String,
+   village: String, 
   sfNoExtent: String,
-  classification: String,
-  leasePeriod: String,
-    dispatchNo:String, 
-    withinTamilNadu: String, 
   mineralName: String,
   signature:String, 
-  deliveredTo: String,
-  vehicleNo: String,
-  vehicleType: String,
-  totalDistance: String,
- travellingDate: String,
- requiredTime: String,
+  // deliveredTo: String,
+  // vehicleNo: String,
+  // vehicleType: String,
+  totalDistance: String,  //  approximateDistance:String,
+      travellingDate: String,
+    requiredTime: String,
+ destinationState:String,
+//  startingTime: String,
+//  endTime: String,
   quantity: String,
-  driverLicenseNo: String,
-  driverPhoneNo: String,
-  driverSignature: String, 
- destinationAddress: String,
+  locationStockyard:String,
+  validityStockyard:String,
+  transitSerialNo:String,
+ purchaserName: String,
+ purchaserAddress: String,
   driverName: String,
-  via: String,  
-  lesseeAuthPersonName:String
-}, { 
-  timestamps: true
-});
+  fullname:String,
+  email:{
+    type:String,
+    unique:true
+  },
+  password:String}, {
+  timestamps: true});
 
 const employees = mongoose.model('employees', employeeSchema);
 module.exports = employees  

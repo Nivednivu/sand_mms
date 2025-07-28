@@ -8,17 +8,40 @@ const fs = require('fs');
 
 exports.adminAddQuaeyAPI = async (req, res) => {
   try {
+    // Check if email already exists
+    const existingUser = await admins.findOne({ email: req.body.email });
+     
+    if (existingUser) {
+      return res.status(400).json({
+        success: false, 
+        message: "This email already exists. Please use a different email."
+      });
+    }
+ 
+    // Check if lesseeId already exists   
+    if (req.body.lesseeId) {
+      const existingLessee = await admins.findOne({ lesseeId: req.body.lesseeId });
+      if (existingLessee) {
+        return res.status(400).json({
+          success: false,
+          message: "This lessee ID already exists. Please use a different ID."
+        });
+      }
+    }
+
+    // If both checks pass, create new admin
     const newAdmin = new admins({
       ...req.body,
-
     });
 
     await newAdmin.save();
 
     res.status(201).json({ 
+      success: true,
       message: "Admin data added successfully", 
       data: newAdmin 
     });
+
   } catch (error) {
     console.error('Error adding admin data:', error);
     
@@ -28,6 +51,7 @@ exports.adminAddQuaeyAPI = async (req, res) => {
     }
 
     res.status(500).json({ 
+      success: false,
       message: "Internal server error", 
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
