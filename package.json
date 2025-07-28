@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@getbrevo/brevo": "^2.2.0",
+    "@getbrevo/brevo": "^1.0.1",
     "@sendgrid/mail": "^8.1.5",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
